@@ -1,17 +1,17 @@
 /* Science Lab Hub - 공통 디자인 시스템 (CSS 변수 및 리셋) */
 :root {
-  /* 주요 색상 팔레트 (인디고/블루 기반 현대적 교육 플랫폼) */
-  --primary-color: #2563eb;       /* 메인 블루 */
-  --primary-hover: #1d4ed8;       /* 버튼 호버 블루 */
-  --primary-light: #eff6ff;       /* 연한 블루 배경 */
-  --primary-glow: rgba(37, 99, 235, 0.15);
+  /* 주요 색상 팔레트 (따뜻한 오렌지/주황 테마) */
+  --primary-color: #ea580c;       /* 메인 오렌지 */
+  --primary-hover: #c2410c;       /* 버튼 호버 오렌지 */
+  --primary-light: #fff7ed;       /* 연한 오렌지 배경 */
+  --primary-glow: rgba(234, 88, 12, 0.15);
 
-  --accent-color: #4f46e5;        /* 서브 인디고 */
-  --accent-light: #eef2ff;
+  --accent-color: #f97316;        /* 서브 오렌지 */
+  --accent-light: #ffedd5;
 
-  --bg-main: #f8fafc;            /* 페이지 전체 배경 (슬레이트 50) */
+  --bg-main: #fff7ed;            /* 페이지 전체 배경 (따뜻한 주황/크림 톤) */
   --bg-card: #ffffff;            /* 카드 및 컨테이너 배경 */
-  --bg-nav: rgba(255, 255, 255, 0.92); /* 반투명 내비게이션 */
+  --bg-nav: rgba(255, 255, 255, 0.95); /* 반투명 내비게이션 */
 
   --text-primary: #0f172a;        /* 진한 제목 색상 */
   --text-secondary: #475569;      /* 본문 설명 색상 */
