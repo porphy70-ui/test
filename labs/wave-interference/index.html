@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>파동의 중첩과 간섭 시뮬레이터 — Science Lab Hub</title>
+  <meta name="description" content="고등학교 과학 파동의 기본 성질, 중첩 원리, 2D 수면파의 보강 간섭 및 상쇄 간섭 조건을 탐구하는 가상 실험실입니다.">
+
+  <!-- 한글 웹폰트 Pretendard 연결 -->
+  <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+
+  <!-- 플랫폼 공통 스타일시트 연결 (상대 경로) -->
+  <link rel="stylesheet" href="../../assets/css/variables.css">
+  <link rel="stylesheet" href="../../assets/css/navbar.css">
+
+  <!-- 파동 실험실 전용 스타일시트 -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body data-lab-id="wave-interference">
+
+  <!-- 공통 상단 내비게이션 주입 컨테이너 -->
+  <div id="lab-hub-nav-container"></div>
+
+  <!-- 메인 탐구 작업 영역 -->
+  <main class="wave-lab-container">
+
+    <!-- 상단 소개 배너 -->
+    <header class="wave-header-banner">
+      <div class="wave-header-info">
+        <h1><span>🌊</span> 파동의 중첩과 간섭 시뮬레이터</h1>
+        <p>파동의 변인을 직접 조절하며 <strong>중첩 원리</strong>와 2차원 수면파의 <strong>보강 간섭·상쇄 간섭 조건</strong>을 발견해 보세요.</p>
+      </div>
+    </header>
+
+    <!-- 탐구 모드 선택 탭 (3가지 활동) -->
+    <nav class="wave-tabs-bar" aria-label="파동 탐구 모드">
+      <button type="button" class="wave-tab-btn" data-mode="basic">
+        <span>①</span> 파동의 기본 성질
+      </button>
+      <button type="button" class="wave-tab-btn active" data-mode="superposition">
+        <span>②</span> 파동의 중첩 탐구
+      </button>
+      <button type="button" class="wave-tab-btn" data-mode="interference">
+        <span>③</span> 2D 수면파 간섭 탐구
+      </button>
+    </nav>
+
+    <!-- 과학적 원리 안내 바 -->
+    <section class="formula-badge-strip" aria-label="물리 공식 안내">
+      <div class="formula-chip">
+        📐 <strong>핵심 물리 법칙:</strong> <span id="formula-desc">중첩 원리 y = y₁ + y₂</span>
+      </div>
+    </section>
+
+    <!-- 메인 워크스페이스: 좌측 캔버스 & 애니메이션 제어 / 우측 슬라이더 컨트롤러 -->
+    <div class="wave-workspace-grid">
+
+      <!-- 좌측: 파동 캔버스 시뮬레이션 패널 -->
+      <section class="canvas-panel">
+        <div class="canvas-panel-header">
+          <h2 class="canvas-panel-title"><span>🔬</span> 파동 실시간 시뮬레이션</h2>
+          <span style="font-size: 0.8rem; color: var(--text-muted);">Canvas 물리 엔진 연동</span>
+        </div>
+
+        <!-- Canvas 디스플레이 -->
+        <div class="canvas-wrapper">
+          <canvas id="waveCanvas" width="680" height="380"></canvas>
+        </div>
+
+        <!-- 애니메이션 재생 및 속도 컨트롤 바 -->
+        <div class="anim-control-bar">
+          <div class="anim-btn-group">
+            <button type="button" class="anim-btn" id="btn-play">
+              <span>⏸️</span> 일시 정지
+            </button>
+            <button type="button" class="anim-btn" id="btn-slow">
+              느리게 재생 (0.25x)
+            </button>
+            <button type="button" class="anim-btn" id="btn-reset">
+              시간 리셋
+            </button>
+          </div>
+          <span style="font-size: 0.78rem; color: var(--text-muted);">
+            * 마우스로 캔버스를 클릭하면 간섭 측정점을 이동할 수 있습니다.
+          </span>
+        </div>
+
+        <!-- 실시간 계측 지표 카드 -->
+        <div class="wave-metrics-grid">
+          <div class="metric-card">
+            <div class="metric-label" id="metric-1-label">파동 1 진폭 (A₁)</div>
+            <div class="metric-val blue" id="metric-1-val">25 px</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-label" id="metric-2-label">파동 2 진폭 (A₂)</div>
+            <div class="metric-val purple" id="metric-2-val">25 px</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-label" id="metric-3-label">최대 합성 진폭</div>
+            <div class="metric-val green" id="metric-3-val">50 px</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 우측: 변인 조작 슬라이더 및 분석 패널 -->
+      <section class="control-panel">
+
+        <!-- ① 파동의 기본 성질 컨트롤러 (선택 시 활성화) -->
+        <div id="controls-basic" style="display: none; flex-direction: column; gap: 1.25rem;">
+          <h3 class="control-section-title">파동 변인 조작</h3>
+
+          <div class="slider-group">
+            <div class="slider-header">
+              <label for="slider-basic-amp">진폭 (A)</label>
+              <span class="slider-badge" id="val-basic-amp">25 px</span>
+            </div>
+            <input type="range" id="slider-basic-amp" class="wave-slider" min="10" max="60" value="25">
+          </div>
+
+          <div class="slider-group">
+            <div class="slider-header">
+              <label for="slider-basic-lambda">파장 (λ)</label>
+              <span class="slider-badge" id="val-basic-lambda">120 px</span>
+            </div>
+            <input type="range" id="slider-basic-lambda" class="wave-slider" min="60" max="220" value="120">
+          </div>
+
+          <div class="slider-group">
+            <div class="slider-header">
+              <label for="slider-basic-freq">진동수 (f)</label>
+              <span class="slider-badge" id="val-basic-freq">1.0 Hz</span>
+            </div>
+            <input type="range" id="slider-basic-freq" class="wave-slider" min="0.2" max="2.5" step="0.1" value="1.0">
+          </div>
+
+          <div class="wave-legend-box">
+            <div class="legend-item"><span class="legend-line" style="background: #38bdf8;"></span>진행파 (푸른색)</div>
+            <div class="legend-item"><span style="color: #f43f5e;">●</span>매질 한 점 (붉은 점, ↕ 단진동)</div>
+          </div>
+        </div>
+
+        <!-- ② 파동의 중첩 탐구 컨트롤러 -->
+        <div id="controls-superposition" style="display: flex; flex-direction: column; gap: 1.25rem;">
+          <h3 class="control-section-title">중첩 파동 변인 조작</h3>
+
+          <div class="slider-group">
+            <div class="slider-header">
+              <label for="slider-s-amp1">파동 1 진폭 (A₁)</label>
+              <span class="slider-badge" id="val-s-amp1">25 px</span>
+            </div>
+            <input type="range" id="slider-s-amp1" class="wave-slider" min="5" max="50" value="25">
+          </div>
+
+          <div class="slider-group">
+            <div class="slider-header">
+              <label for="slider-s-amp2">파동 2 진폭 (A₂)</label>
+              <span class="slider-badge" id="val-s-amp2">25 px</span>
+            </div>
+            <input type="range" id="slider-s-amp2" class="wave-slider" min="5" max="50" value="25">
+          </div>
+
+          <div class="slider-group">
+            <div class="slider-header">
+              <label for="slider-s-phase2">파동 2 위상차 (Δφ)</label>
+              <span class="slider-badge" id="val-s-phase2">0°</span>
+            </div>
+            <input type="range" id="slider-s-phase2" class="wave-slider" min="0" max="360" step="30" value="0">
+          </div>
+
+          <div class="slider-group">
+            <div class="slider-header">
+              <label for="select-dir">파동 2 진행 방향</label>
+            </div>
+            <select id="select-dir" style="padding: 0.5rem; border-radius: var(--radius-sm); border: 1px solid var(--border-color); font-weight: 600;">
+              <option value="-1">마주 보고 진행 (반대 방향 ←)</option>
+              <option value="1">나란히 진행 (같은 방향 →)</option>
+            </select>
+          </div>
+
+          <div class="wave-legend-box" style="flex-direction: column; align-items: flex-start; gap: 0.4rem;">
+            <div class="legend-item"><span class="legend-line" style="background: #38bdf8;"></span>파동 1 (하늘색)</div>
+            <div class="legend-item"><span class="legend-line" style="background: #c084fc;"></span>파동 2 (보라색)</div>
+            <div class="legend-item"><span class="legend-line" style="background: #ffffff; border: 1px solid #94a3b8;"></span>합성파 y = y₁ + y₂ (흰색 굵은선)</div>
+          </div>
+        </div>
+
+        <!-- ③ 2D 수면파 간섭 컨트롤러 -->
+        <div id="controls-interference" style="display: none; flex-direction: column; gap: 1.25rem;">
+          <h3 class="control-section-title">2D 수면파 간섭 변인 조작</h3>
+
+          <div class="slider-group">
+            <div class="slider-header">
+              <label for="slider-inter-dist">두 파원 간격 (d)</label>
+              <span class="slider-badge" id="val-inter-dist">140 px</span>
+            </div>
+            <input type="range" id="slider-inter-dist" class="wave-slider" min="60" max="240" step="10" value="140">
+          </div>
+
+          <div class="slider-group">
+            <div class="slider-header">
+              <label for="slider-inter-lambda">수면파 파장 (λ)</label>
+              <span class="slider-badge" id="val-inter-lambda">35 px</span>
+            </div>
+            <input type="range" id="slider-inter-lambda" class="wave-slider" min="20" max="60" step="5" value="35">
+          </div>
+
+          <div class="slider-group">
+            <div class="slider-header">
+              <label for="select-inter-phase">파원 진동 위상</label>
+            </div>
+            <select id="select-inter-phase" style="padding: 0.5rem; border-radius: var(--radius-sm); border: 1px solid var(--border-color); font-weight: 600;">
+              <option value="0">동위상 (함께 마루/골 발생)</option>
+              <option value="3.14159">역위상 (반대로 마루/골 발생, Δφ = π)</option>
+            </select>
+          </div>
+
+          <!-- 클릭 지점 경로차 실시간 계산기 -->
+          <div class="interference-point-box">
+            <h4><span>📍</span> 선택 측정점 P 경로차 분석</h4>
+            <div class="point-stat-row">
+              <span>파원 S₁ 거리 (d₁):</span>
+              <strong id="point-d1">-</strong>
+            </div>
+            <div class="point-stat-row">
+              <span>파원 S₂ 거리 (d₂):</span>
+              <strong id="point-d2">-</strong>
+            </div>
+            <div class="point-stat-row">
+              <span>경로차 |d₁ - d₂|:</span>
+              <strong id="point-delta" style="color: #2563eb;">-</strong>
+            </div>
+            <div class="point-stat-row" style="margin-top: 0.35rem; border: none;">
+              <span>간섭 판정:</span>
+              <strong id="point-condition">-</strong>
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+    </div>
+
+    <!-- 5단계 학생 주도 탐구 활동 워크시트 -->
+    <section class="inquiry-steps-container">
+      <h2 class="inquiry-section-title"><span>🧭</span> 5단계 파동 탐구 워크시트</h2>
+
+      <div class="steps-accordion">
+        <article class="step-card">
+          <div class="step-card-header">
+            <span class="step-card-num">1</span>
+            <span>예측하기 (Predict)</span>
+          </div>
+          <p>
+            두 파동의 마루와 마루가 만날 때와, 마루와 골이 만날 때 합성파의 진폭은 각각 어떻게 달라질까요? 수면 위의 한 지점까지 두 파원으로부터의 거리 차이가 파장의 1배, 1.5배일 때 각각 어떤 간섭이 일어날지 가설을 세워보세요.
+          </p>
+          <textarea class="inquiry-input" rows="2" placeholder="자신의 과학적 가설을 적어보세요..."></textarea>
+        </article>
+
+        <article class="step-card">
+          <div class="step-card-header">
+            <span class="step-card-num">2</span>
+            <span>실험하기 (Experiment)</span>
+          </div>
+          <p>
+            [파동의 중첩 탐구]에서 위상차를 0°(동위상)와 180°(반대 위상)로 바꾸며 합성파의 모양을 관찰하고, [2D 수면파 간섭]에서 수면의 여러 지점을 클릭하여 경로차와 밝기(수면 높이)를 측정해 보세요.
+          </p>
+        </article>
+
+        <article class="step-card">
+          <div class="step-card-header">
+            <span class="step-card-num">3</span>
+            <span>분석하기 (Analyze)</span>
+          </div>
+          <p>
+            측정점의 경로차가 파장의 정수배(0, 1λ, 2λ...)일 때와 반정수배(0.5λ, 1.5λ...)일 때 수면파의 진동(보강/상쇄)은 각각 어떻게 나타나는지 비교 분석해 보세요.
+          </p>
+          <textarea class="inquiry-input" rows="2" placeholder="경로차와 파장의 비율에 따른 간섭 규칙을 분석해 보세요..."></textarea>
+        </article>
+
+        <article class="step-card">
+          <div class="step-card-header">
+            <span class="step-card-num">4</span>
+            <span>정리하기 (Summarize)</span>
+          </div>
+          <p>
+            파동의 독립성(중첩 후 각 파동이 본래 특성을 유지하며 계속 진행함)과 보강·상쇄 간섭 조건을 자신의 언어로 명확히 정리해 보세요.
+          </p>
+          <textarea class="inquiry-input" rows="2" placeholder="파동의 중첩 원리와 간섭 조건을 설명해 보세요..."></textarea>
+        </article>
+
+        <article class="step-card">
+          <div class="step-card-header">
+            <span class="step-card-num">5</span>
+            <span>적용하기 (Apply)</span>
+          </div>
+          <p>
+            노이즈 캔슬링 이어폰(소음 제거), 무반사 코팅 렌즈, 콘서트홀 음향 사각지대 등 실생활 속에서 파동의 간섭이 응용되는 원리를 설명해 보세요.
+          </p>
+          <textarea class="inquiry-input" rows="2" placeholder="실생활 속 파동의 간섭 응용 사례를 적어보세요..."></textarea>
+        </article>
+      </div>
+
+      <!-- 과학적 유의점 안내 -->
+      <div class="physics-notice">
+        <strong>⚠️ 과학적 유의점 (간섭 조건 판정):</strong><br>
+        지속적이고 선명한 간섭무늬는 두 파원의 진동수와 파장이 같고 위상 관계가 일정한 <strong>결맞는 파동(Coherent Wave)</strong>에서만 관찰됩니다. 또한 두 파원이 반대 위상(역위상, Δφ = π)으로 진동할 때는 경로차가 정수배일 때 오히려 상쇄 간섭이, 반정수배일 때 보강 간섭이 일어나므로 단순 경로차뿐만 아니라 <strong>초기 위상차</strong>를 반드시 함께 고려해야 합니다.
+      </div>
+    </section>
+
+  </main>
+
+  <!-- 플랫폼 공통 데이터 및 내비게이션 스크립트 연결 (상대 경로) -->
+  <script src="../../assets/js/labs-data.js"></script>
+  <script src="../../assets/js/nav-component.js"></script>
+
+  <!-- 파동 시뮬레이터 전용 물리 엔진 스크립트 -->
+  <script src="script.js"></script>
+</body>
+</html>

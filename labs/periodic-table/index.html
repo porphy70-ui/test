@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>주기율표 탐구 실험실 (장주기형) — Science Lab Hub</title>
+  <meta name="description" content="1번 수소부터 118번 오가네손까지 1~7주기 18족 전체 원소를 탐구할 수 있는 장주기형 주기율표 가상 실험실입니다.">
+
+  <!-- 한글 웹폰트 Pretendard 연결 -->
+  <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+
+  <!-- 플랫폼 공통 스타일시트 연결 (상대 경로) -->
+  <link rel="stylesheet" href="../../assets/css/variables.css">
+  <link rel="stylesheet" href="../../assets/css/navbar.css">
+
+  <!-- 주기율표 탐구 실험실 전용 스타일시트 -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body data-lab-id="periodic-table">
+
+  <!-- 공통 상단 내비게이션 주입 컨테이너 -->
+  <div id="lab-hub-nav-container"></div>
+
+  <!-- 메인 탐구 작업 영역 -->
+  <main class="ptable-container">
+
+    <!-- 상단 안내 헤더 -->
+    <section class="lab-intro-banner">
+      <div class="lab-intro-title-group">
+        <h1><span>🧪</span> 주기율표 탐구 실험실 (장주기형 주기율표)</h1>
+        <p>1번 수소(H)부터 118번 오가네손(Og)까지 <strong>1~7주기 18족 및 란타넘·악티늄족</strong>의 전자 배치, 보어 원자 모형, 동위 원소 핵자 수를 탐구해 보세요.</p>
+      </div>
+    </section>
+
+    <!-- 원소 분류별 필터 및 범례 바 -->
+    <nav class="ptable-legend-bar" aria-label="원소 분류 필터">
+      <span class="legend-label">원소 분류:</span>
+      <button type="button" class="legend-chip active" data-filter="all">전체 원소 (1~118번)</button>
+      <button type="button" class="legend-chip cat-alkali-metal" data-filter="alkali-metal"><span class="dot"></span>알칼리 금속 (1족)</button>
+      <button type="button" class="legend-chip cat-alkaline-earth" data-filter="alkaline-earth"><span class="dot"></span>알칼리 토금속 (2족)</button>
+      <button type="button" class="legend-chip cat-transition-metal" data-filter="transition-metal"><span class="dot"></span>전이 금속 (3~12족)</button>
+      <button type="button" class="legend-chip cat-lanthanide" data-filter="lanthanide"><span class="dot"></span>란타넘족</button>
+      <button type="button" class="legend-chip cat-actinide" data-filter="actinide"><span class="dot"></span>악티늄족</button>
+      <button type="button" class="legend-chip cat-post-transition" data-filter="post-transition"><span class="dot"></span>전이후 금속</button>
+      <button type="button" class="legend-chip cat-metalloid" data-filter="metalloid"><span class="dot"></span>준금속</button>
+      <button type="button" class="legend-chip cat-nonmetal" data-filter="nonmetal"><span class="dot"></span>비금속</button>
+      <button type="button" class="legend-chip cat-halogen" data-filter="halogen"><span class="dot"></span>할로젠 (17족)</button>
+      <button type="button" class="legend-chip cat-noble-gas" data-filter="noble-gas"><span class="dot"></span>비활성 기체 (18족)</button>
+    </nav>
+
+    <!-- 장주기형 주기율표 핵심 안내 -->
+    <div class="periodicity-tip">
+      <span>💡</span>
+      <span><strong>장주기형 주기율표 구조</strong>: 전이 금속(3~12족)이 포함되어 4~7주기가 길어진 형태이며, 하단에 란타넘족(57~71)과 악티늄족(89~103)이 2개의 독립된 행으로 분리되어 배치됩니다.</span>
+    </div>
+
+    <!-- 장주기형 주기율표 전체 격자 래퍼 -->
+    <div class="ptable-grid-wrapper">
+      <!-- (1) 본체 그리드 (1~7주기, 1~18족) -->
+      <div class="ptable-grid" id="ptable-grid" role="region" aria-label="본체 주기율표 그리드">
+        <!-- script.js에 의해 동적으로 렌더링됩니다 -->
+      </div>
+
+      <!-- (2) 하단 f-구역 (란타넘족 및 악티늄족) -->
+      <div class="ptable-fblock-wrapper">
+        <div class="fblock-row" id="lanthanide-row"></div>
+        <div class="fblock-row" id="actinide-row"></div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- 원소 상세 정보 모달 (클릭 시 팝업) -->
+  <div class="modal-backdrop" id="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="modal-elem-name">
+    <div class="modal-content">
+      
+      <!-- 모달 상단 헤더 -->
+      <header class="modal-header">
+        <div class="modal-header-left">
+          <div class="modal-symbol-badge" id="modal-symbol-badge">
+            <span class="atomic-no" id="modal-elem-number">1</span>
+            <span class="elem-symbol" id="modal-elem-symbol">H</span>
+          </div>
+          <div class="modal-title-text">
+            <h2>
+              <span id="modal-elem-name">수소</span>
+              <span class="eng" id="modal-elem-eng">Hydrogen</span>
+            </h2>
+          </div>
+        </div>
+        <button type="button" class="modal-close-btn" id="modal-close-btn" aria-label="창 닫기">&times;</button>
+      </header>
+
+      <!-- 모달 본문 -->
+      <div class="modal-body">
+
+        <!-- 상단 2컬럼: 보어 원자 모형 vs 핵심 사양 -->
+        <div class="modal-grid-2col">
+          
+          <div class="bohr-model-box">
+            <div class="bohr-model-title">
+              <span>🪐</span> 보어 원자 모형 (전자 껍질 시각화)
+            </div>
+            <div class="bohr-svg-wrap">
+              <svg id="bohr-svg" width="240" height="240" viewBox="0 0 240 240"></svg>
+            </div>
+            <div class="bohr-shell-legend" id="bohr-shell-text"></div>
+          </div>
+
+          <div class="spec-cards">
+            <div class="spec-card">
+              <div class="spec-card-label">주기 (Period)</div>
+              <div class="spec-card-value" id="spec-period">-</div>
+            </div>
+            <div class="spec-card">
+              <div class="spec-card-label">족 (Group)</div>
+              <div class="spec-card-value" id="spec-group">-</div>
+            </div>
+            <div class="spec-card highlight">
+              <div class="spec-card-label">원자가 전자 수</div>
+              <div class="spec-card-value" id="spec-valence">-</div>
+            </div>
+            <div class="spec-card">
+              <div class="spec-card-label">원소의 분류</div>
+              <div class="spec-card-value" id="spec-category">-</div>
+            </div>
+            <div class="spec-card" style="grid-column: span 2;">
+              <div class="spec-card-label">표준 원자량 (평균 원자량)</div>
+              <div class="spec-card-value" id="spec-mass" style="font-size: 1.15rem;">-</div>
+            </div>
+            <div class="spec-card" style="grid-column: span 2;">
+              <div class="spec-card-label">바닥상태 전자 배치</div>
+              <div class="spec-card-value" id="spec-config" style="font-size: 0.95rem; font-family: monospace;">-</div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- 동위 원소 및 핵자(양성자, 중성자, 질량수) 계산기 -->
+        <section class="isotopes-section">
+          <h3><span>⚖️</span> 대표 동위 원소 및 핵자 계산</h3>
+          
+          <div class="isotope-select-row">
+            <label for="isotope-select" style="font-size: 0.88rem; font-weight: 600; color: var(--text-secondary);">
+              동위 원소 선택:
+            </label>
+            <select id="isotope-select" class="isotope-select"></select>
+          </div>
+
+          <div class="subatomic-calc-box">
+            <div class="subatomic-item">
+              <div class="sub-label">양성자 수 (원자 번호 Z)</div>
+              <div class="sub-val" id="calc-protons" style="color: #2563eb;">-</div>
+            </div>
+            <div class="subatomic-item">
+              <div class="sub-label">중성자 수 (N = A - Z)</div>
+              <div class="sub-val" id="calc-neutrons" style="color: #059669;">-</div>
+            </div>
+            <div class="subatomic-item">
+              <div class="sub-label">질량수 (A = 양성자 + 중성자)</div>
+              <div class="sub-val" id="calc-mass-number" style="color: #dc2626;">-</div>
+            </div>
+          </div>
+          <p style="font-size: 0.78rem; color: var(--text-muted); margin-top: 0.6rem;">
+            * <strong>표준 원자량</strong>은 자연계 동위 원소의 존재 비율을 고려한 평균값이며, <strong>질량수</strong>는 선택한 특정 동위 원소의 양성자 수와 중성자 수의 합(정수)입니다.
+          </p>
+        </section>
+
+        <!-- 원소의 주요 화학적 성질 및 특징 -->
+        <section class="properties-box">
+          <strong style="color: var(--primary-color);">주요 화학적 성질 및 이용:</strong>
+          <p id="modal-properties" style="margin-top: 0.3rem;"></p>
+        </section>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- 플랫폼 공통 데이터 및 내비게이션 스크립트 연결 (상대 경로) -->
+  <script src="../../assets/js/labs-data.js"></script>
+  <script src="../../assets/js/nav-component.js"></script>
+
+  <!-- 주기율표 실험실 전용 데이터 및 로직 스크립트 -->
+  <script src="elements-data.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>

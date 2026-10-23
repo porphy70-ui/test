@@ -1,0 +1,174 @@
+/* Science Lab Hub - 개별 실험 안내/콘텐츠 템플릿용 공통 스타일 */
+
+.lab-view-container {
+  max-width: 1080px;
+  margin: 2rem auto 4rem;
+  padding: 0 1.5rem;
+}
+
+/* 수업 헤더 배너 */
+.lab-header-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 2.5rem;
+  margin-bottom: 2rem;
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  align-items: flex-start;
+  gap: 2rem;
+}
+
+.lab-header-icon {
+  font-size: 3.5rem;
+  width: 90px;
+  height: 90px;
+  background: var(--primary-light);
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.lab-header-info {
+  flex-grow: 1;
+}
+
+.lab-header-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.lab-header-meta-tag {
+  background: var(--accent-light);
+  color: var(--accent-color);
+  font-size: 0.8rem;
+  font-weight: 700;
+  padding: 0.25rem 0.65rem;
+  border-radius: var(--radius-full);
+}
+
+.lab-header-title {
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin-bottom: 0.75rem;
+}
+
+.lab-header-desc {
+  font-size: 1.05rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+/* 실험 준비 안내 카드 */
+.lab-preview-box {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 3rem 2rem;
+  text-align: center;
+  box-shadow: var(--shadow-sm);
+}
+
+.lab-preview-illustration {
+  font-size: 4rem;
+  margin-bottom: 1.5rem;
+}
+
+.lab-preview-heading {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 0.75rem;
+}
+
+.lab-preview-text {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  max-width: 620px;
+  margin: 0 auto 2rem;
+  line-height: 1.7;
+}
+
+/* 주요 탐구 학습 목표 리스트 */
+.lab-goals-card {
+  background: var(--bg-main);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 1.75rem 2rem;
+  max-width: 700px;
+  margin: 0 auto 2rem;
+  text-align: left;
+}
+
+.lab-goals-title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.lab-goals-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.lab-goals-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+}
+
+.lab-goals-list li::before {
+  content: "✔";
+  color: var(--primary-color);
+  font-weight: bold;
+}
+
+.lab-action-row {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.lab-btn-outline {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.8rem 1.5rem;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  color: var(--text-primary);
+  background: #ffffff;
+  transition: var(--transition);
+}
+
+.lab-btn-outline:hover {
+  border-color: var(--primary-color);
+  color: var(--primary-color);
+  background: var(--primary-light);
+}
+
+@media (max-width: 640px) {
+  .lab-header-card {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  .lab-header-meta {
+    justify-content: center;
+  }
+}

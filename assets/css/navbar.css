@@ -1,0 +1,139 @@
+/* Science Lab Hub - 공통 상단 내비게이션 바 스타일 */
+.lab-hub-nav {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background-color: var(--bg-nav);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border-color);
+  padding: 0 1.5rem;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: var(--shadow-sm);
+}
+
+.lab-hub-nav-left {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+/* 홈 로고 링크 */
+.lab-hub-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-weight: 700;
+  font-size: 1.15rem;
+  color: var(--primary-color);
+  transition: var(--transition);
+}
+
+.lab-hub-logo:hover {
+  opacity: 0.85;
+}
+
+.lab-hub-logo-icon {
+  width: 32px;
+  height: 32px;
+  background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+  color: #ffffff;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+}
+
+/* 목록으로 돌아가기 버튼 */
+.lab-hub-back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  padding: 0.45rem 0.85rem;
+  border-radius: var(--radius-sm);
+  background-color: var(--bg-main);
+  border: 1px solid var(--border-color);
+  transition: var(--transition);
+}
+
+.lab-hub-back-btn:hover {
+  background-color: var(--primary-light);
+  color: var(--primary-color);
+  border-color: var(--primary-color);
+}
+
+/* 중앙 현재 수업 정보 (실험 페이지용) */
+.lab-hub-nav-center {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.lab-hub-nav-badge {
+  background-color: var(--primary-light);
+  color: var(--primary-color);
+  font-size: 0.75rem;
+  padding: 0.2rem 0.5rem;
+  border-radius: var(--radius-full);
+  font-weight: 700;
+}
+
+/* 이전/다음 수업 이동 버튼 영역 */
+.lab-hub-nav-right {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.lab-hub-nav-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  padding: 0.45rem 0.8rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-color);
+  background-color: #ffffff;
+  transition: var(--transition);
+}
+
+.lab-hub-nav-link:hover:not(.disabled) {
+  border-color: var(--primary-color);
+  color: var(--primary-color);
+  background-color: var(--primary-light);
+}
+
+.lab-hub-nav-link.disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* 모바일/태블릿 반응형 */
+@media (max-width: 768px) {
+  .lab-hub-nav {
+    padding: 0 1rem;
+    height: 56px;
+  }
+  .lab-hub-nav-center {
+    display: none; /* 작은 화면에서는 중앙 제목 숨김 */
+  }
+  .lab-hub-logo-text {
+    display: none;
+  }
+  .lab-hub-nav-link span {
+    display: none; /* 아이콘/화살표만 노출 */
+  }
+}

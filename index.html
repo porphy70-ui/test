@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Science Lab Hub — 과학 인터랙티브 수업 플랫폼</title>
+  <meta name="description" content="중·고등학교 과학 수업을 위한 반응형 인터랙티브 과학 탐구 시뮬레이션 플랫폼입니다.">
+
+  <!-- 한글 웹폰트 Pretendard 연결 -->
+  <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+
+  <!-- 공통 디자인 시스템 및 포털 스타일시트 -->
+  <link rel="stylesheet" href="assets/css/variables.css">
+  <link rel="stylesheet" href="assets/css/hub-portal.css">
+</head>
+<body>
+
+  <!-- 메인 히어로 배너 영역 -->
+  <header class="hub-header">
+    <div class="hub-header-content">
+      <span class="hub-badge">🔬 중·고등학교 인터랙티브 과학 수업</span>
+      <h1 class="hub-title">Science Lab Hub</h1>
+      <p class="hub-subtitle">
+        가상 실험실에서 직접 조작하고 관찰하며 과학 원리를 즐겁게 탐구해 보세요.<br>
+        수업별 카드를 클릭하면 개별 시뮬레이션으로 바로 이동합니다.
+      </p>
+    </div>
+  </header>
+
+  <!-- 메인 콘텐츠 영역 -->
+  <main class="hub-main">
+
+    <!-- 학년/과목별 필터 컨트롤러 -->
+    <section class="filter-container" aria-label="수업 탐색 및 필터">
+      <!-- 과목 필터 -->
+      <div class="filter-row">
+        <span class="filter-label">과목</span>
+        <div class="filter-chips" id="subject-chips">
+          <button type="button" class="filter-chip active" data-subject="all">전체</button>
+          <button type="button" class="filter-chip" data-subject="물리">물리</button>
+          <button type="button" class="filter-chip" data-subject="화학">화학</button>
+          <button type="button" class="filter-chip" data-subject="물리/화학">통합/융합</button>
+        </div>
+
+        <!-- 실시간 검색창 -->
+        <div class="search-box-wrapper">
+          <span class="search-icon">🔍</span>
+          <input type="text" id="lab-search" class="search-input" placeholder="실험 제목, 개념 태그 검색..." autocomplete="off">
+        </div>
+      </div>
+    </section>
+
+    <!-- 검색 및 카운터 정보 -->
+    <div class="results-info">
+      <div>전체 등록 수업: <span id="total-count" class="results-count">0</span>개</div>
+      <div id="filter-status-text">모든 수업을 표시 중입니다.</div>
+    </div>
+
+    <!-- 수업 카드 그리드 (동적 렌더링 영역) -->
+    <section class="labs-grid" id="labs-container" aria-label="과학 탐구 수업 목록">
+      <!-- labs-data.js의 데이터로 자동 생성됩니다 -->
+    </section>
+
+  </main>
+
+  <!-- 푸터 정보 -->
+  <footer class="hub-footer">
+    <p>© Science Lab Hub. 교사와 학생을 위한 인터랙티브 과학 교육 플랫폼</p>
+  </footer>
+
+  <!-- 데이터 및 렌더링 스크립트 연결 -->
+  <script src="assets/js/labs-data.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const labsContainer = document.getElementById("labs-container");
+      const totalCountSpan = document.getElementById("total-count");
+      const searchInput = document.getElementById("lab-search");
+      const subjectChips = document.querySelectorAll("#subject-chips .filter-chip");
+      const filterStatusText = document.getElementById("filter-status-text");
+
+      let currentSubject = "all";
+      let searchKeyword = "";
+
+      // 카드 렌더링 함수
+      function renderLabs() {
+        if (!window.LABS_DATA) return;
+
+        const filtered = window.LABS_DATA.filter(lab => {
+          // 과목 필터링
+          const matchesSubject = currentSubject === "all" || lab.subject.includes(currentSubject);
+          // 검색어 필터링 (제목, 설명, 태그, 단원 대상)
+          const q = searchKeyword.toLowerCase().trim();
+          const matchesSearch = !q || 
+            lab.title.toLowerCase().includes(q) ||
+            lab.description.toLowerCase().includes(q) ||
+            lab.unit.toLowerCase().includes(q) ||
+            lab.tags.some(tag => tag.toLowerCase().includes(q));
+
+          return matchesSubject && matchesSearch;
+        });
+
+        totalCountSpan.textContent = filtered.length;
+
+        if (filtered.length === 0) {
+          labsContainer.innerHTML = `
+            <div class="no-results">
+              <div class="no-results-icon">🔎</div>
+              <h3 class="no-results-title">조건에 맞는 수업을 찾을 수 없습니다.</h3>
+              <p class="no-results-text">다른 검색어나 필터 조건을 선택해 보세요.</p>
+            </div>
+          `;
+          return;
+        }
+
+        labsContainer.innerHTML = filtered.map(lab => `
+          <article class="lab-card">
+            <div class="lab-card-header">
+              <div class="lab-icon-box" aria-hidden="true">${lab.icon}</div>
+              <div class="lab-meta-badges">
+                <span class="lab-number">${lab.number}</span>
+                <span class="lab-grade">${lab.grade} · ${lab.subject}</span>
+              </div>
+            </div>
+
+            <h2 class="lab-title">${lab.title}</h2>
+            <p class="lab-desc">${lab.description}</p>
+
+            <div class="lab-tags" aria-label="관련 과학 개념 태그">
+              ${lab.tags.map(tag => `<span class="lab-tag">#${tag}</span>`).join('')}
+            </div>
+
+            <a href="${lab.path}" class="lab-start-btn" aria-label="${lab.title} 탐구 시작하기">
+              <span>탐구 시작하기</span>
+              <span class="arrow" aria-hidden="true">→</span>
+            </a>
+          </article>
+        `).join('');
+      }
+
+      // 과목 필터 클릭 이벤트 등록
+      subjectChips.forEach(chip => {
+        chip.addEventListener("click", () => {
+          subjectChips.forEach(c => c.classList.remove("active"));
+          chip.classList.add("active");
+          currentSubject = chip.getAttribute("data-subject");
+          
+          if (currentSubject === "all") {
+            filterStatusText.textContent = "모든 수업을 표시 중입니다.";
+          } else {
+            filterStatusText.textContent = `'${currentSubject}' 관련 수업 필터링 결과입니다.`;
+          }
+          
+          renderLabs();
+        });
+      });
+
+      // 검색어 입력 이벤트 등록
+      searchInput.addEventListener("input", (e) => {
+        searchKeyword = e.target.value;
+        renderLabs();
+      });
+
+      // 초기 렌더링 실행
+      renderLabs();
+    });
+  </script>
+</body>
+</html>

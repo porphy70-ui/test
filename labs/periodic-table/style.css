@@ -1,0 +1,491 @@
+/* 주기율표 탐구 실험실 전용 스타일시트 (장주기형 주기율표 지원) */
+
+.ptable-container {
+  max-width: 1440px;
+  margin: 1.5rem auto 4rem;
+  padding: 0 1rem;
+}
+
+/* 상단 실험실 헤더 */
+.lab-intro-banner {
+  background: #ffffff;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem 2rem;
+  margin-bottom: 1.25rem;
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1.25rem;
+}
+
+.lab-intro-title-group h1 {
+  font-size: 1.85rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 0.35rem;
+}
+
+.lab-intro-title-group p {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+}
+
+/* 범례 및 필터 버튼 바 */
+.ptable-legend-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.45rem;
+  background: #ffffff;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 0.85rem 1.25rem;
+  margin-bottom: 1.25rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.legend-label {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-right: 0.35rem;
+}
+
+.legend-chip {
+  padding: 0.35rem 0.65rem;
+  border-radius: var(--radius-full);
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: var(--transition);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: var(--bg-main);
+  color: var(--text-secondary);
+}
+
+.legend-chip .dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.legend-chip.active {
+  box-shadow: 0 0 0 2px var(--text-primary);
+  font-weight: 700;
+}
+
+/* 원소 분류별 색상 팔레트 */
+.cat-alkali-metal { background: #fee2e2; color: #991b1b; }
+.cat-alkali-metal .dot { background: #ef4444; }
+
+.cat-alkaline-earth { background: #ffedd5; color: #9a3412; }
+.cat-alkaline-earth .dot { background: #f97316; }
+
+.cat-transition-metal { background: #fef9c3; color: #854d0e; }
+.cat-transition-metal .dot { background: #eab308; }
+
+.cat-post-transition { background: #e0e7ff; color: #3730a3; }
+.cat-post-transition .dot { background: #6366f1; }
+
+.cat-metalloid { background: #ecfdf5; color: #065f46; }
+.cat-metalloid .dot { background: #10b981; }
+
+.cat-nonmetal { background: #e0f2fe; color: #075985; }
+.cat-nonmetal .dot { background: #0ea5e9; }
+
+.cat-halogen { background: #ede9fe; color: #5b21b6; }
+.cat-halogen .dot { background: #8b5cf6; }
+
+.cat-noble-gas { background: #fce7f3; color: #9d174d; }
+.cat-noble-gas .dot { background: #ec4899; }
+
+.cat-lanthanide { background: #ccfbf1; color: #115e59; }
+.cat-lanthanide .dot { background: #14b8a6; }
+
+.cat-actinide { background: #ffe4e6; color: #9f1239; }
+.cat-actinide .dot { background: #f43f5e; }
+
+/* 탐구 가이드 팁 박스 */
+.periodicity-tip {
+  background: var(--primary-light);
+  border: 1px solid #bfdbfe;
+  border-radius: var(--radius-md);
+  padding: 0.85rem 1.25rem;
+  margin-bottom: 1.25rem;
+  font-size: 0.88rem;
+  color: #1e40af;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+/* 장주기형 주기율표 스크롤 래퍼 및 격자 */
+.ptable-grid-wrapper {
+  overflow-x: auto;
+  padding-bottom: 1rem;
+  background: #ffffff;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 1.25rem 1rem;
+  box-shadow: var(--shadow-sm);
+}
+
+/* 본체 주기율표 (1~7주기, 1~18족) */
+.ptable-grid {
+  display: grid;
+  grid-template-columns: repeat(18, minmax(54px, 1fr));
+  gap: 4px;
+  min-width: 1080px;
+}
+
+/* 란타넘족/악티늄족 분리 배치 그리드 */
+.ptable-fblock-wrapper {
+  margin-top: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 1080px;
+}
+
+.fblock-row {
+  display: grid;
+  grid-template-columns: repeat(18, minmax(54px, 1fr));
+  gap: 4px;
+  align-items: center;
+}
+
+.fblock-label {
+  grid-column: 1 / span 3;
+  font-size: 0.78rem;
+  font-weight: 800;
+  text-align: right;
+  padding-right: 0.75rem;
+  color: var(--text-secondary);
+}
+
+/* 빈 셀 */
+.ptable-empty-cell {
+  background: transparent;
+  pointer-events: none;
+}
+
+/* 란타넘/악티늄 위치 안내 셀 */
+.ptable-placeholder-cell {
+  border: 1px dashed var(--border-color);
+  border-radius: var(--radius-sm);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  aspect-ratio: 1 / 1.15;
+}
+
+/* 원소 셀 */
+.ptable-cell {
+  aspect-ratio: 1 / 1.15;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-color);
+  padding: 4px 3px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  user-select: none;
+  background-color: #ffffff;
+}
+
+.ptable-cell:hover {
+  transform: translateY(-3px) scale(1.08);
+  box-shadow: var(--shadow-hover);
+  z-index: 10;
+  border-color: var(--primary-color);
+}
+
+.ptable-cell-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+}
+
+.ptable-symbol {
+  font-size: 1.15rem;
+  font-weight: 800;
+  line-height: 1;
+  text-align: center;
+  color: var(--text-primary);
+  margin: 1px 0;
+}
+
+.ptable-name {
+  font-size: 0.64rem;
+  text-align: center;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--text-secondary);
+}
+
+.ptable-mass {
+  font-size: 0.58rem;
+  text-align: center;
+  color: var(--text-muted);
+}
+
+/* 모달 창 레이아웃 */
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(15, 23, 42, 0.65);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  padding: 1.25rem;
+}
+
+.modal-backdrop.active {
+  display: flex;
+  animation: fadeIn 0.2s ease-out forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.modal-content {
+  background: #ffffff;
+  width: 100%;
+  max-width: 860px;
+  max-height: 92vh;
+  border-radius: var(--radius-lg);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--border-color);
+}
+
+.modal-header {
+  padding: 1.25rem 2rem;
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  background: #ffffff;
+  z-index: 10;
+}
+
+.modal-header-left {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.modal-symbol-badge {
+  width: 58px;
+  height: 58px;
+  border-radius: var(--radius-md);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  box-shadow: var(--shadow-sm);
+}
+
+.modal-symbol-badge .atomic-no { font-size: 0.75rem; }
+.modal-symbol-badge .elem-symbol { font-size: 1.6rem; }
+
+.modal-title-text h2 {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+}
+
+.modal-title-text h2 span.eng {
+  font-size: 0.95rem;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.modal-close-btn {
+  font-size: 1.75rem;
+  color: var(--text-muted);
+  padding: 0.25rem 0.5rem;
+  border-radius: var(--radius-sm);
+}
+.modal-close-btn:hover { color: var(--text-primary); }
+
+.modal-body {
+  padding: 1.75rem 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.modal-grid-2col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  align-items: center;
+}
+
+.bohr-model-box {
+  background: var(--bg-main);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 1.25rem;
+  text-align: center;
+}
+
+.bohr-model-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 0.5rem;
+}
+
+.bohr-svg-wrap {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 240px;
+}
+
+.bohr-shell-legend {
+  margin-top: 0.5rem;
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  font-weight: 600;
+}
+
+.spec-cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
+
+.spec-card {
+  background: var(--bg-main);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  padding: 0.75rem 0.9rem;
+}
+
+.spec-card-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  margin-bottom: 0.15rem;
+}
+
+.spec-card-value {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: var(--primary-color);
+}
+
+.spec-card.highlight {
+  background: var(--accent-light);
+  border-color: #c7d2fe;
+}
+.spec-card.highlight .spec-card-value {
+  color: var(--accent-color);
+}
+
+.isotopes-section {
+  background: #ffffff;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 1.25rem;
+}
+
+.isotopes-section h3 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 0.75rem;
+}
+
+.isotope-select-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.isotope-select {
+  padding: 0.4rem 0.75rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-color);
+  font-size: 0.88rem;
+  font-weight: 600;
+  background-color: var(--bg-main);
+}
+
+.subatomic-calc-box {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.75rem;
+  background: var(--bg-main);
+  border-radius: var(--radius-sm);
+  padding: 0.85rem;
+  text-align: center;
+}
+
+.subatomic-item .sub-label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.subatomic-item .sub-val {
+  font-size: 1.25rem;
+  font-weight: 800;
+  margin-top: 0.2rem;
+}
+
+.properties-box {
+  background: #f8fafc;
+  border-left: 4px solid var(--primary-color);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  padding: 1rem 1.25rem;
+  font-size: 0.92rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+@media (max-width: 768px) {
+  .modal-grid-2col {
+    grid-template-columns: 1fr;
+  }
+}
